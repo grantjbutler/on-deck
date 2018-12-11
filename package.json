@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "elgato-stream-deck": "github:kudos/node-elgato-stream-deck.git#node-10",
+    "node-hid": "^0.7.4",
     "osc": "^2.2.4",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
