@@ -1,6 +1,7 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, /* BrowserWindow, */ Menu, Tray } from 'electron'
+import path from 'path'
 
 /**
  * Set `__static` path to static files in production
@@ -10,38 +11,50 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+// let mainWindow
+// const winURL = process.env.NODE_ENV === 'development'
+//   ? `http://localhost:9080`
+//   : `file://${__dirname}/index.html`
 
-function createWindow () {
-  /**
-   * Initial window options
-   */
-  mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000
-  })
+let tray
 
-  mainWindow.loadURL(winURL)
+// function createWindow () {
+//   /**
+//    * Initial window options
+//    */
+//   mainWindow = new BrowserWindow({
+//     height: 563,
+//     useContentSize: true,
+//     width: 1000
+//   })
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+//   mainWindow.loadURL(winURL)
+
+//   mainWindow.on('closed', () => {
+//     mainWindow = null
+//   })
+// }
+
+function createTray () {
+  tray = new Tray(path.join(__static, 'menuTemplate.png'))
+  const contextMenu = Menu.buildFromTemplate([
+    {label: 'Preferences', type: 'normal'},
+    {type: 'separator'},
+    {label: 'Quit', type: 'normal', click () { app.quit() }}
+  ])
+  tray.setContextMenu(contextMenu)
 }
 
-app.on('ready', createWindow)
+app.on('ready', createTray)
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+// app.on('window-all-closed', () => {
+//   if (process.platform !== 'darwin') {
+//     app.quit()
+//   }
+// })
 
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
+// app.on('activate', () => {
+//   if (mainWindow === null) {
+//     createWindow()
+//   }
+// })
